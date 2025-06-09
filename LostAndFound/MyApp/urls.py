@@ -7,7 +7,7 @@ urlpatterns = [
     path("post/", views.post_create, name="post"),
     path("detail/<int:post_id>/", views.post_detail, name="detail"),
     path("login/", views.login_view, name="login"),
-    path("register/", views.register_view, name="register"),  # 新增注册路由
+    path("register/", views.register_view, name="register"),
     path("logout/", views.logout_view, name="logout"),
     path("change_avatar/", views.change_avatar, name="change_avatar"),
 ]
