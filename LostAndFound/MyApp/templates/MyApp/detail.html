@@ -109,34 +109,45 @@
 <body>
 
     <div class="container">
-        <div class="title">黑色钱包丢失</div>
-        <div class="info-line">种类：钱包 | 时间：2025-06-01 | 地点：C区 图书馆</div>
-
-        <div class="user-box">
-            <img src="default-avatar.png" alt="头像">
-            <span>张三</span>
+        <div class="title">{{ post.title }}</div>
+        <div class="info-line">
+            种类：{{ post.ItemType }} | 时间：{{ post.PostTime|date:"Y-m-d" }} | 地点：{{ post.Location }}
         </div>
 
-        <img src="sample.jpg" alt="物品图片" class="post-image">
+        <div class="user-box">
+            <img src="/static/default-avatar.png" alt="头像">
+            <span>{{ post.user.name }}</span>
+        </div>
+
+        {% if post.Img %}
+            <img src="{{ post.Img.url }}" alt="物品图片" class="post-image">
+        {% endif %}
 
         <div class="description">
-            今天中午在图书馆二楼自习室丢失一个黑色钱包，内有身份证、学生卡、银行卡等。
-            若有拾到者请联系本人，十分感谢！
+            {{ post.description }}
         </div>
 
         <div class="comment-section">
             <h3>评论</h3>
-
-            <!-- 已有评论示例 -->
+            {% for comment in comments %}
             <div class="comment">
-                李四：我刚刚也看到一个钱包在门口角落，可能是你的！
+                {{ comment.user.name }}：{{ comment.content }}
             </div>
+            {% empty %}
+            <div class="comment">暂无评论</div>
+            {% endfor %}
 
-            <!-- 评论输入框 -->
-            <div class="comment-box">
-                <textarea placeholder="写下你的评论..."></textarea>
-                <button onclick="submitComment()">发送</button>
-            </div>
+            {% if request.session.user_id %}
+            <form method="post" style="margin-top:1rem;">
+                {% csrf_token %}
+                <div class="comment-box">
+                    <textarea name="content" placeholder="输入评论..." required></textarea>
+                    <button type="submit">发布</button>
+                </div>
+            </form>
+            {% else %}
+            <div style="color:#888;margin-top:1rem;">请<a href="{% url 'MyApp:login' %}">登录</a>后评论</div>
+            {% endif %}
         </div>
     </div>
 

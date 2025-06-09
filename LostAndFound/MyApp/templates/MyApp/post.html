@@ -75,7 +75,8 @@
     <div class="container">
         <h2>发布启事</h2>
 
-        <form id="postForm">
+        <form id="postForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
             <label>标题：</label>
             <input type="text" name="title" required>
 
@@ -93,18 +94,14 @@
             <input type="date" name="date" required>
 
             <label>大区：</label>
-            <select id="zoneSelect" name="zone" onchange="updateLocationOptions()" required>
-                <option>A区</option>
-                <option>B区</option>
-                <option>C区</option>
-                <option>D区</option>
-                <option>E区</option>
-                <option>其他</option>
-            </select>
-
-            <label>详细地点：</label>
-            <select id="locationSelect" name="location" required>
-                <!-- JS 自动填充 -->
+            <select name="zone" required>
+                <option>A区 食堂, 宿舍（南区）, 健康与环境工程学院</option>
+                <option>B区 食堂, 创意设计学院, 外国语学院</option>
+                <option>C区 湖景食堂, 大数据与互联网学院, 图书馆</option>
+                <option>D区 城市交通与物流学院, 体育馆, 中德智能制造学院</option>
+                <option>E区 食堂, 宿舍（北区）, 校医院</option>
+                <option>F区 鑫福佳, 地铁站</option>
+                <option>校外 竹韵食堂, 临时运动场, 社康中心</option>
             </select>
 
             <label>描述信息：</label>
@@ -120,12 +117,13 @@
 
     <script>
         const locationMap = {
-            'A区': ['食堂', '宿舍（南区）', '健康与环境工程学院'],
-            'B区': ['食堂', '创意设计学院', '外国语学院'],
-            'C区': ['湖景食堂', '大数据与互联网学院', '图书馆'],
-            'D区': ['城市交通与物流学院', '体育馆', '中德智能制造学院'],
-            'E区': ['食堂', '宿舍（北区）', '校医院'],
-            '其他': ['竹韵食堂', '临时运动场', '社康中心']
+            'A区 食堂, 宿舍（南区）, 健康与环境工程学院': ['食堂', '宿舍（南区）', '健康与环境工程学院'],
+            'B区 食堂, 创意设计学院, 外国语学院': ['食堂', '创意设计学院', '外国语学院'],
+            'C区 湖景食堂, 大数据与互联网学院, 图书馆': ['湖景食堂', '大数据与互联网学院', '图书馆'],
+            'D区 城市交通与物流学院, 体育馆, 中德智能制造学院': ['城市交通与物流学院', '体育馆', '中德智能制造学院'],
+            'E区 食堂, 宿舍（北区）, 校医院': ['食堂', '宿舍（北区）', '校医院'],
+            'F区 鑫福佳, 地铁站': ['鑫福佳', '地铁站'],
+            '校外 竹韵食堂, 临时运动场, 社康中心': ['竹韵食堂', '临时运动场', '社康中心']
         };
 
         function updateLocationOptions() {
@@ -148,14 +146,9 @@
             };
             reader.readAsDataURL(event.target.files[0]);
         }
-
+        
         window.onload = updateLocationOptions;
 
-        // 模拟提交事件
-        document.getElementById("postForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-            alert("已提交发布（后端待对接）");
-        });
     </script>
 
 </body>

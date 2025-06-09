@@ -30,7 +30,8 @@
 
         input[type="text"],
         input[type="password"],
-        input[type="email"] {
+        input[type="email"],
+        input[type="number"] {
             width: 100%;
             padding: 0.5rem;
             margin: 0.5rem 0;
@@ -55,25 +56,43 @@
             color: #555;
             cursor: pointer;
         }
+
+        .error {
+            color: red;
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
-    <div class="container" id="loginBox">
+    <div class="container" id="loginBox" {% if register %}style="display:none;"{% endif %}>
         <h2>用户登录</h2>
-        <input type="text" placeholder="用户名">
-        <input type="password" placeholder="密码">
-        <button class="btn">登录</button>
+        {% if login_error %}
+            <div class="error">{{ login_error }}</div>
+        {% endif %}
+        <form method="post" action="{% url 'MyApp:login' %}">
+            {% csrf_token %}
+            <input type="number" name="user_id" placeholder="用户ID" required>
+            <input type="password" name="password" placeholder="密码" required>
+            <button class="btn" type="submit">登录</button>
+        </form>
         <div class="switch-link" onclick="toggleBox()">没有账号？注册</div>
     </div>
 
-    <div class="container" id="registerBox" style="display: none;">
+    <div class="container" id="registerBox" {% if register %}{% else %}style="display:none;"{% endif %}>
         <h2>用户注册</h2>
-        <input type="text" placeholder="用户名">
-        <input type="email" placeholder="邮箱">
-        <input type="password" placeholder="密码">
-        <input type="password" placeholder="确认密码">
-        <button class="btn">注册</button>
+        {% if register_error %}
+            <div class="error">{{ register_error }}</div>
+        {% endif %}
+        <form method="post" action="{% url 'MyApp:register' %}">
+            {% csrf_token %}
+            <input type="number" name="user_id" placeholder="用户ID" required>
+            <input type="text" name="name" placeholder="用户名" required>
+            <input type="email" name="email" placeholder="邮箱" required>
+            <input type="password" name="password" placeholder="密码" required>
+            <input type="password" name="password2" placeholder="确认密码" required>
+            <button class="btn" type="submit">注册</button>
+        </form>
         <div class="switch-link" onclick="toggleBox()">已有账号？登录</div>
     </div>
 

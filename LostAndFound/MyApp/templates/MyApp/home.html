@@ -110,15 +110,25 @@
     <div class="header">
         <div class="logo">失物招领系统</div>
         <div class="user-box">
-            <img src="default-avatar.png" alt="用户头像" onclick="alert('点击更换头像')">
-            <span>用户名123</span>
+            {% if request.session.user_id %}
+                <img src="{% if user_avatar %}{{ user_avatar }}{% else %}/static/default-avatar.png{% endif %}" alt="用户头像" onclick="document.getElementById('avatarInput').click()" title="点击更换头像">
+                <form id="avatarForm" action="{% url 'MyApp:change_avatar' %}" method="post" enctype="multipart/form-data" style="display:none;">
+                    {% csrf_token %}
+                    <input type="file" id="avatarInput" name="avatar" accept="image/*" onchange="document.getElementById('avatarForm').submit();">
+                </form>
+                <span>{{ request.session.user_name }}</span>
+                <a href="{% url 'MyApp:logout' %}" style="margin-left:1rem;">退出</a>
+            {% else %}
+                <a href="{% url 'MyApp:login' %}">登录/注册</a>
+            {% endif %}
         </div>
     </div>
 
     <!-- 搜索区域 -->
     <div class="search-area">
         <label>种类：
-            <select>
+            <select id="categorySelect">
+                <option value="">全部</option>
                 <option>手机</option>
                 <option>钱包</option>
                 <option>证件</option>
@@ -126,46 +136,52 @@
             </select>
         </label>
         <label>时间：
-            <input type="date">
+            <input type="date" id="dateSelect">
         </label>
         <label>大区：
-            <select id="zoneSelect" onchange="updateLocationOptions()">
-                <option>A区</option>
-                <option>B区</option>
-                <option>C区</option>
-                <option>D区</option>
-                <option>E区</option>
-                <option>其他</option>
+            <select id="zoneSelect">
+                <option value="">全部</option>
+                <option>A区 食堂, 宿舍（南区）, 健康与环境工程学院</option>
+                <option>B区 食堂, 创意设计学院, 外国语学院</option>
+                <option>C区 湖景食堂, 大数据与互联网学院, 图书馆</option>
+                <option>D区 城市交通与物流学院, 体育馆, 中德智能制造学院</option>
+                <option>E区 食堂, 宿舍（北区）, 校医院</option>
+                <option>F区 鑫福佳, 地铁站</option>
+                <option>校外 竹韵食堂, 临时运动场, 社康中心</option>
             </select>
         </label>
-        <label>详细地点：
-            <select id="locationSelect">
-                <!-- 由 JS 动态填充 -->
-            </select>
-        </label>
+        <button id="searchBtn" style="margin-left:1rem;">搜索</button>
+        <a href="{% url 'MyApp:post' %}">
+            <button type="button" style="margin-left:1rem;">发布启事</button>
+        </a>
     </div>
 
     <!-- 内容展示 -->
     <div class="posts" id="postsContainer">
-        <!-- 模拟帖子 -->
-        <div class="post-card">
-            <img src="sample.jpg" alt="物品图片">
-            <div class="post-title">黑色钱包丢失</div>
-            <div class="post-snippet">丢失于C区图书馆...</div>
+        {% for post in posts %}
+        <div class="post-card" onclick="window.location.href='{% url 'MyApp:detail' post.id %}'">
+            {% if post.Img %}
+            <img src="{{ post.Img.url }}" alt="物品图片">
+            {% else %}
+            <img src="/static/default.jpg" alt="物品图片">
+            {% endif %}
+            <div class="post-title">{{ post.title }}</div>
+            <div class="post-snippet">{{ post.description|truncatechars:20 }}</div>
         </div>
-        <!-- 可添加更多卡片 -->
+        {% endfor %}
     </div>
 
     <div class="load-more">下拉以加载更多内容</div>
 
     <script>
         const locationMap = {
-            'A区': ['食堂', '宿舍（南区）', '健康与环境工程学院'],
-            'B区': ['食堂', '创意设计学院', '外国语学院'],
-            'C区': ['湖景食堂', '大数据与互联网学院', '图书馆'],
-            'D区': ['城市交通与物流学院', '体育馆', '中德智能制造学院'],
-            'E区': ['食堂', '宿舍（北区）', '校医院'],
-            '其他': ['竹韵食堂', '临时运动场', '社康中心']
+            'A区 食堂, 宿舍（南区）, 健康与环境工程学院': ['食堂', '宿舍（南区）', '健康与环境工程学院'],
+            'B区 食堂, 创意设计学院, 外国语学院': ['食堂', '创意设计学院', '外国语学院'],
+            'C区 湖景食堂, 大数据与互联网学院, 图书馆': ['湖景食堂', '大数据与互联网学院', '图书馆'],
+            'D区 城市交通与物流学院, 体育馆, 中德智能制造学院': ['城市交通与物流学院', '体育馆', '中德智能制造学院'],
+            'E区 食堂, 宿舍（北区）, 校医院': ['食堂', '宿舍（北区）', '校医院'],
+            'F区 鑫福佳, 地铁站': ['鑫福佳', '地铁站'],
+            '校外 竹韵食堂, 临时运动场, 社康中心': ['竹韵食堂', '临时运动场', '社康中心']
         };
 
         function updateLocationOptions() {
@@ -185,3 +201,20 @@
 </body>
 
 </html>
+<script>
+    // ...已有JS...
+
+    document.getElementById("searchBtn").onclick = function () {
+        const category = document.getElementById("categorySelect").value;
+        const date = document.getElementById("dateSelect").value;
+        const zone = document.getElementById("zoneSelect").value;
+        const location = document.getElementById("locationSelect").value;
+        let params = [];
+        if (category) params.push("category=" + encodeURIComponent(category));
+        if (date) params.push("date=" + encodeURIComponent(date));
+        if (zone) params.push("zone=" + encodeURIComponent(zone));
+        if (location) params.push("location=" + encodeURIComponent(location));
+        let url = "?" + params.join("&");
+        window.location.href = url;
+    };
+</script>
