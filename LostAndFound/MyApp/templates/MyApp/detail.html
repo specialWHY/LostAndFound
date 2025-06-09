@@ -1,0 +1,162 @@
+<!-- detail.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>启事详情</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-line {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .user-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .user-box img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .post-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .description {
+            line-height: 1.6;
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 2rem;
+            white-space: pre-line;
+        }
+
+        .comment-section {
+            margin-top: 2rem;
+            border-top: 1px solid #ddd;
+            padding-top: 1rem;
+        }
+
+        .comment-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .comment-box {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .comment-box textarea {
+            flex: 1;
+            padding: 0.6rem;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .comment-box button {
+            margin-left: 1rem;
+            padding: 0.6rem 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .comment {
+            background-color: #f9f9f9;
+            padding: 0.8rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="title">黑色钱包丢失</div>
+        <div class="info-line">种类：钱包 | 时间：2025-06-01 | 地点：C区 图书馆</div>
+
+        <div class="user-box">
+            <img src="default-avatar.png" alt="头像">
+            <span>张三</span>
+        </div>
+
+        <img src="sample.jpg" alt="物品图片" class="post-image">
+
+        <div class="description">
+            今天中午在图书馆二楼自习室丢失一个黑色钱包，内有身份证、学生卡、银行卡等。
+            若有拾到者请联系本人，十分感谢！
+        </div>
+
+        <div class="comment-section">
+            <h3>评论</h3>
+
+            <!-- 已有评论示例 -->
+            <div class="comment">
+                李四：我刚刚也看到一个钱包在门口角落，可能是你的！
+            </div>
+
+            <!-- 评论输入框 -->
+            <div class="comment-box">
+                <textarea placeholder="写下你的评论..."></textarea>
+                <button onclick="submitComment()">发送</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function submitComment() {
+            const textarea = document.querySelector('.comment-box textarea');
+            const text = textarea.value.trim();
+            if (!text) {
+                alert("请输入评论内容");
+                return;
+            }
+
+            const commentDiv = document.createElement("div");
+            commentDiv.className = "comment";
+            commentDiv.textContent = `你：${text}`;
+            document.querySelector('.comment-section').insertBefore(commentDiv, document.querySelector('.comment-box'));
+            textarea.value = '';
+        }
+    </script>
+
+</body>
+
+</html>

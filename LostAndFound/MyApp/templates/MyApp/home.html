@@ -1,0 +1,187 @@
+<!-- home.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>失物招领平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        /* 顶部栏 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .user-box {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-box img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            cursor: pointer;
+        }
+
+        /* 搜索框区域 */
+        .search-area {
+            background-color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-area select,
+        .search-area input {
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        /* 帖子展示区 */
+        .posts {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .post-card {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .post-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .post-title {
+            margin-top: 0.5rem;
+            font-weight: bold;
+        }
+
+        /* 加载更多提示 */
+        .load-more {
+            text-align: center;
+            padding: 2rem;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 顶部栏 -->
+    <div class="header">
+        <div class="logo">失物招领系统</div>
+        <div class="user-box">
+            <img src="default-avatar.png" alt="用户头像" onclick="alert('点击更换头像')">
+            <span>用户名123</span>
+        </div>
+    </div>
+
+    <!-- 搜索区域 -->
+    <div class="search-area">
+        <label>种类：
+            <select>
+                <option>手机</option>
+                <option>钱包</option>
+                <option>证件</option>
+                <option>钥匙</option>
+            </select>
+        </label>
+        <label>时间：
+            <input type="date">
+        </label>
+        <label>大区：
+            <select id="zoneSelect" onchange="updateLocationOptions()">
+                <option>A区</option>
+                <option>B区</option>
+                <option>C区</option>
+                <option>D区</option>
+                <option>E区</option>
+                <option>其他</option>
+            </select>
+        </label>
+        <label>详细地点：
+            <select id="locationSelect">
+                <!-- 由 JS 动态填充 -->
+            </select>
+        </label>
+    </div>
+
+    <!-- 内容展示 -->
+    <div class="posts" id="postsContainer">
+        <!-- 模拟帖子 -->
+        <div class="post-card">
+            <img src="sample.jpg" alt="物品图片">
+            <div class="post-title">黑色钱包丢失</div>
+            <div class="post-snippet">丢失于C区图书馆...</div>
+        </div>
+        <!-- 可添加更多卡片 -->
+    </div>
+
+    <div class="load-more">下拉以加载更多内容</div>
+
+    <script>
+        const locationMap = {
+            'A区': ['食堂', '宿舍（南区）', '健康与环境工程学院'],
+            'B区': ['食堂', '创意设计学院', '外国语学院'],
+            'C区': ['湖景食堂', '大数据与互联网学院', '图书馆'],
+            'D区': ['城市交通与物流学院', '体育馆', '中德智能制造学院'],
+            'E区': ['食堂', '宿舍（北区）', '校医院'],
+            '其他': ['竹韵食堂', '临时运动场', '社康中心']
+        };
+
+        function updateLocationOptions() {
+            const zone = document.getElementById("zoneSelect").value;
+            const locSelect = document.getElementById("locationSelect");
+            locSelect.innerHTML = '';
+            locationMap[zone].forEach(loc => {
+                const opt = document.createElement('option');
+                opt.text = loc;
+                locSelect.add(opt);
+            });
+        }
+
+        // 初始化地点
+        window.onload = updateLocationOptions;
+    </script>
+</body>
+
+</html>
