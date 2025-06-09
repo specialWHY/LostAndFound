@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'LostAndFound', # 数据库名称
         'USER': 'root',  # 根据你的配置修改
-        'PASSWORD': '1280635205w',  # 根据你的配置修改
+        'PASSWORD': '202300801087',  # 根据你的配置修改
         'HOST': 'localhost',
         'PORT': '3306',
     }
